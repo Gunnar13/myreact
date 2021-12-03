@@ -1,8 +1,11 @@
-//import logo from './logo.svg';
+//import logo from './logo.svg'; import { useState, useEffect, useMemo } from 'react';
+//import React, {useState} from 'react';
+
 import './App.css';
+import {Message} from './components/Messge.js'
+import { useEffect, useState } from 'react';
+const text = 'any  ttext';
 
-
-//<img src={logo} className="App-logo" alt="logo" />
 
 /*
 инлайновый стиль <div style={{paddingTop: '25px', border: '1px solid white'}}>
@@ -10,44 +13,92 @@ import './App.css';
 
 */
 function App(props) {
-  return (
+       // const [count, setCount] = useState(0);
+      const [messageList, setMessageList] = useState([]);
+      const [value, setValue] = useState("");
+      //const [users, setUsers] = useState([]);
+
+      const sendMessage = (author, text) => {
+        const newMessageList = [...messageList];
+        const newMessage = {
+          author,
+          text
+        };
+        newMessageList.push(newMessage);
+        setMessageList(newMessageList);
+      };
+
+      const onChangeMessageInput = (event) => {
+        setValue(event.target.value)
+      };
+
+      const onSubmitMessage = (event) => {
+        event.preventDefault();
+        sendMessage("user", value);
+        resetForm();
+      };
+
+      const resetForm = () => {
+        setValue("");
+      };
+
+      useEffect(() => {
+        if (messageList.length === 0 ){return;}
+        const tail = messageList[messageList.length - 1]
+        if (tail.author === "bot") {
+          return;
+        }
+        sendMessage("bot", "hello i am bot");
+      }, [messageList]);
+
+      /*
+        const addUser = () => {
+          setUsers([
+            ...users,{
+              name: `user_${users.length}`
+              }
+              ])
+              };*/
+              
+    return (
       <div className="App">
-        <header
-      className={`App-header ${props.showRed ? 'header-red' : 'header-blue'}`}                         
-      style={{top: props.topPosition || '10px'}}
-     >
-
-        My First React App
-        <h3>Hello, {props.name}</h3>
-        <div>
-        <h3>Домашнее задание</h3>
-        <p style={{fontSize: '18px', width:'400px'}}>1.Развернуть новый проект с использованием create-react-app. - + </p>
-        <p style={{fontSize: '18px', width:'700px'}}>Проект создал, как описано в методичке и на уроке </p>
-        <p style={{fontSize: '18px', width:'400px'}}>3.Стилизовать компоненты через css (при желании можно использовать less или sass, однако для sass нужно дополнительно установить node-sass: документация CRA). </p>
-        <p style={{fontSize: '18px', width:'800px'}}>разобрал что такое инлайновый стиль и className=</p>
-        <p style={{fontSize: '18px', width:'400px'}}>5.Установить расширение React Devtools. Установил в фаерфоксе так как хромом не пользуюсь, похоже на Vue Devtools </p>
-
-
-
-
-
-
+        <header  className="App-header">
+          <div style={{width: '350px', border: '1px solid white', backgroundColor: "wheat", color:"black"}}>
+           {messageList.map((item, index)=><div>{item.author} :  {item.text}
+          </div>)}
+          </div>
           
-           </div>
-        <div style={{paddingTop: '25px', border: '1px solid white'}}>
-    Inline Styles
-   </div>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+          <div>
+            <form onSubmit={onSubmitMessage}>
+              <input
+                onChange={onChangeMessageInput} 
+                value={value}
+                type="text" 
+                
+                />
+              <button>
+                submit
+              </button>
+            </form>
+          </div>
+
+          My Second React App
+        <h3>Hello, {props.name}</h3>
+          <Message text={text}/>
+          <div style={{paddingTop: '25px', border: '1px solid white'}}>
+                Inline Styles
+          </div>
+          <p>
+               Edit <code>src/App.js</code> and save to reload.
+          </p>
+          <a
+                  className="App-link"
+                  href="https://reactjs.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+          >
+                  Learn React
+          </a>
       </header>
     </div>
   );
